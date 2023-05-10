@@ -481,6 +481,8 @@ func NewSimApp(
 	icaHostStack = icahost.NewIBCModule(app.ICAHostKeeper)
 	icaHostStack = ibcfee.NewIBCMiddleware(icaHostStack, app.IBCFeeKeeper)
 
+	nfttransferStack := nfttransfer.NewIBCModule(app.NFTTransferKeeper)
+
 	// Add host, controller & ica auth modules to IBC router
 	ibcRouter.
 		// the ICA Controller middleware needs to be explicitly added to the IBC Router because the
@@ -488,6 +490,7 @@ func NewSimApp(
 		// owns the channel capability.
 		AddRoute(icacontrollertypes.SubModuleName, icaControllerStack).
 		AddRoute(icahosttypes.SubModuleName, icaHostStack).
+		AddRoute(ibcnfttransfertypes.ModuleName, nfttransferStack).
 		AddRoute(ibcmock.ModuleName+icacontrollertypes.SubModuleName, icaControllerStack) // ica with mock auth module stack route to ica (top level of middleware stack)
 
 	// Create Mock IBC Fee module stack for testing
