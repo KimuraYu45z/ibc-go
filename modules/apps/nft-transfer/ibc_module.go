@@ -75,9 +75,9 @@ func (im IBCModule) OnChanOpenInit(
 	chanCap *capabilitytypes.Capability,
 	counterparty channeltypes.Counterparty,
 	version string,
-) error {
+) (string, error) {
 	if err := ValidateTransferChannelParams(ctx, im.keeper, order, portID, channelID); err != nil {
-		return err
+		return "", err
 	}
 
 	if strings.TrimSpace(version) == "" {
@@ -85,15 +85,15 @@ func (im IBCModule) OnChanOpenInit(
 	}
 
 	if version != types.Version {
-		return sdkerrors.Wrapf(types.ErrInvalidVersion, "got %s, expected %s", version, types.Version)
+		return "", sdkerrors.Wrapf(types.ErrInvalidVersion, "got %s, expected %s", version, types.Version)
 	}
 
 	// Claim channel capability passed back by IBC module
 	if err := im.keeper.ClaimCapability(ctx, chanCap, host.ChannelCapabilityPath(portID, channelID)); err != nil {
-		return err
+		return "", err
 	}
 
-	return nil
+	return version, nil
 }
 
 // OnChanOpenTry implements the IBCModule interface.
@@ -185,7 +185,8 @@ func (im IBCModule) OnRecvPacket(
 
 	var data types.NonFungibleTokenPacketData
 	if err := types.ModuleCdc.UnmarshalJSON(packet.GetData(), &data); err != nil {
-		ack = channeltypes.NewErrorAcknowledgement("cannot unmarshal ICS-721 nft-transfer packet data")
+		ackErr := sdkerrors.Wrapf(sdkerrors.ErrInvalidType, "cannot unmarshal ICS-721 nft-transfer packet data")
+		ack = channeltypes.NewErrorAcknowledgement(ackErr)
 	}
 
 	// only attempt the application logic if the packet data
