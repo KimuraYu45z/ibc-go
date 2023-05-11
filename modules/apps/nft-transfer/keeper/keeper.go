@@ -1,7 +1,7 @@
 package keeper
 
 import (
-	"github.com/tendermint/tendermint/libs/log"
+	"github.com/cometbft/cometbft/libs/log"
 
 	"github.com/cosmos/cosmos-sdk/codec"
 	storetypes "github.com/cosmos/cosmos-sdk/store/types"
@@ -9,8 +9,8 @@ import (
 	capabilitykeeper "github.com/cosmos/cosmos-sdk/x/capability/keeper"
 	capabilitytypes "github.com/cosmos/cosmos-sdk/x/capability/types"
 
-	"github.com/cosmos/ibc-go/v5/modules/apps/nft-transfer/types"
-	host "github.com/cosmos/ibc-go/v5/modules/core/24-host"
+	"github.com/cosmos/ibc-go/v7/modules/apps/nft-transfer/types"
+	host "github.com/cosmos/ibc-go/v7/modules/core/24-host"
 )
 
 // Keeper defines the IBC non fungible transfer keeper

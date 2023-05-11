@@ -9,11 +9,11 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/cosmos-sdk/x/nft"
 
-	"github.com/cosmos/ibc-go/v5/modules/apps/nft-transfer/types"
-	clienttypes "github.com/cosmos/ibc-go/v5/modules/core/02-client/types"
-	channeltypes "github.com/cosmos/ibc-go/v5/modules/core/04-channel/types"
-	host "github.com/cosmos/ibc-go/v5/modules/core/24-host"
-	coretypes "github.com/cosmos/ibc-go/v5/modules/core/types"
+	"github.com/cosmos/ibc-go/v7/modules/apps/nft-transfer/types"
+	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
+	channeltypes "github.com/cosmos/ibc-go/v7/modules/core/04-channel/types"
+	host "github.com/cosmos/ibc-go/v7/modules/core/24-host"
+	coretypes "github.com/cosmos/ibc-go/v7/modules/core/types"
 )
 
 // SendTransfer handles nft-transfer sending logic.
@@ -33,16 +33,15 @@ import (
 // For example, assume these steps of transfer occur:
 // A -> B -> C -> A -> C -> B -> A
 //
-//|                    sender  chain                      |                       receiver     chain              |
-//| :-----: | -------------------------: | :------------: | :------------: | -------------------------: | :-----: |
-//|  chain  |                    classID | (port,channel) | (port,channel) |                    classID |  chain  |
-//|    A    |                   nftClass |    (p1,c1)     |    (p2,c2)     |             p2/c2/nftClass |    B    |
-//|    B    |             p2/c2/nftClass |    (p3,c3)     |    (p4,c4)     |       p4/c4/p2/c2/nftClass |    C    |
-//|    C    |       p4/c4/p2/c2/nftClass |    (p5,c5)     |    (p6,c6)     | p6/c6/p4/c4/p2/c2/nftClass |    A    |
-//|    A    | p6/c6/p4/c4/p2/c2/nftClass |    (p6,c6)     |    (p5,c5)     |       p4/c4/p2/c2/nftClass |    C    |
-//|    C    |       p4/c4/p2/c2/nftClass |    (p4,c4)     |    (p3,c3)     |             p2/c2/nftClass |    B    |
-//|    B    |             p2/c2/nftClass |    (p2,c2)     |    (p1,c1)     |                   nftClass |    A    |
-//
+// |                    sender  chain                      |                       receiver     chain              |
+// | :-----: | -------------------------: | :------------: | :------------: | -------------------------: | :-----: |
+// |  chain  |                    classID | (port,channel) | (port,channel) |                    classID |  chain  |
+// |    A    |                   nftClass |    (p1,c1)     |    (p2,c2)     |             p2/c2/nftClass |    B    |
+// |    B    |             p2/c2/nftClass |    (p3,c3)     |    (p4,c4)     |       p4/c4/p2/c2/nftClass |    C    |
+// |    C    |       p4/c4/p2/c2/nftClass |    (p5,c5)     |    (p6,c6)     | p6/c6/p4/c4/p2/c2/nftClass |    A    |
+// |    A    | p6/c6/p4/c4/p2/c2/nftClass |    (p6,c6)     |    (p5,c5)     |       p4/c4/p2/c2/nftClass |    C    |
+// |    C    |       p4/c4/p2/c2/nftClass |    (p4,c4)     |    (p3,c3)     |             p2/c2/nftClass |    B    |
+// |    B    |             p2/c2/nftClass |    (p2,c2)     |    (p1,c1)     |                   nftClass |    A    |
 func (k Keeper) SendTransfer(
 	ctx sdk.Context,
 	sourcePort,
