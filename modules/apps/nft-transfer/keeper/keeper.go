@@ -46,7 +46,7 @@ func NewKeeper(
 
 // Logger returns a module-specific logger.
 func (k Keeper) Logger(ctx sdk.Context) log.Logger {
-	return ctx.Logger().With("module", "x/"+host.ModuleName+"-"+types.ModuleName)
+	return ctx.Logger().With("module", "x/"+host.SubModuleName+"-"+types.ModuleName)
 }
 
 // SetPort sets the portID for the nft-transfer module. Used in InitGenesis
